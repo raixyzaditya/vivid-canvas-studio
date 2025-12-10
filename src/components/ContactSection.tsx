@@ -1,14 +1,14 @@
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Send, Mail, MapPin, Github, Linkedin, Twitter, CheckCircle } from 'lucide-react';
+import { Send, Mail, MapPin, Phone, Github, Linkedin, CheckCircle, Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 const socialLinks = [
-  { icon: Github, href: '#', label: 'GitHub', color: 'hover:text-foreground' },
+  { icon: Github, href: 'https://github.com/raixyzaditya', label: 'GitHub', color: 'hover:text-foreground' },
   { icon: Linkedin, href: '#', label: 'LinkedIn', color: 'hover:text-blue-500' },
-  { icon: Twitter, href: '#', label: 'Twitter', color: 'hover:text-sky-400' },
-  { icon: Mail, href: 'mailto:hello@johndoe.com', label: 'Email', color: 'hover:text-primary' },
+  { icon: Code2, href: '#', label: 'LeetCode', color: 'hover:text-amber-500' },
+  { icon: Mail, href: 'mailto:raiaditya915@gmail.com', label: 'Email', color: 'hover:text-primary' },
 ];
 
 const ContactSection = () => {
@@ -70,7 +70,7 @@ const ContactSection = () => {
             Let's Work <span className="gradient-text">Together</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Have a project in mind? I'd love to hear about it. Drop me a message and let's create something amazing.
+            Have a project in mind? I'd love to hear about it. Let's create something amazing.
           </p>
         </motion.div>
 
@@ -191,8 +191,9 @@ const ContactSection = () => {
             <div className="space-y-8">
               {/* Info Cards */}
               <div className="space-y-4">
-                <motion.div
-                  className="glass rounded-xl p-6 flex items-center gap-4"
+                <motion.a
+                  href="mailto:raiaditya915@gmail.com"
+                  className="glass rounded-xl p-6 flex items-center gap-4 block"
                   whileHover={{ scale: 1.02, x: 4 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -201,9 +202,24 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">hello@johndoe.com</p>
+                    <p className="font-medium">raiaditya915@gmail.com</p>
                   </div>
-                </motion.div>
+                </motion.a>
+
+                <motion.a
+                  href="tel:+919818831002"
+                  className="glass rounded-xl p-6 flex items-center gap-4 block"
+                  whileHover={{ scale: 1.02, x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+                    <Phone className="text-primary" size={22} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="font-medium">+91 98188 31002</p>
+                  </div>
+                </motion.a>
 
                 <motion.div
                   className="glass rounded-xl p-6 flex items-center gap-4"
@@ -215,7 +231,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="font-medium">San Francisco, CA</p>
+                    <p className="font-medium">Faridabad, India</p>
                   </div>
                 </motion.div>
               </div>
@@ -228,6 +244,8 @@ const ContactSection = () => {
                     <motion.a
                       key={social.label}
                       href={social.href}
+                      target={social.href.startsWith('http') ? '_blank' : undefined}
+                      rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className={`w-12 h-12 rounded-full glass flex items-center justify-center text-muted-foreground ${social.color} transition-all duration-300`}
                       whileHover={{ scale: 1.15, y: -2 }}
                       whileTap={{ scale: 0.95 }}
@@ -255,7 +273,7 @@ const ContactSection = () => {
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                   </span>
                   <span className="text-sm">
-                    Currently available for freelance work
+                    Open to internships and collaboration opportunities
                   </span>
                 </div>
               </motion.div>
