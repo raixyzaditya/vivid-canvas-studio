@@ -6,9 +6,12 @@ import { useToast } from '@/hooks/use-toast';
 
 const socialLinks = [
   { icon: Github, href: 'https://github.com/raixyzaditya', label: 'GitHub', color: 'hover:text-foreground' },
+
   { icon: Linkedin, href: 'https://www.linkedin.com/in/aditya-rai-4854742b8/', label: 'LinkedIn', color: 'hover:text-blue-500' },
   
   { icon: Mail, href: 'mailto:raiaditya915@gmail.com?subject=Hello Aditya&body=Hi Aditya,%0D%0A%0D%0AI wanted to connect with you regarding...', label: 'Email', color: 'hover:text-primary' },
+
+  
 ];
 
 const ContactSection = () => {
