@@ -1,13 +1,47 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import Navigation from '@/components/Navigation';
+import HeroSection from '@/components/HeroSection';
+import AboutSection from '@/components/AboutSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
+import LoadingScreen from '@/components/LoadingScreen';
+import Particles, { FloatingShapes } from '@/components/Particles';
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      <AnimatePresence>
+        {isLoading && (
+          <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      {!isLoading && (
+        <div className="relative overflow-hidden">
+          {/* Background Effects */}
+          <Particles />
+          <FloatingShapes />
+
+          {/* Navigation */}
+          <Navigation />
+
+          {/* Main Content */}
+          <main>
+            <HeroSection />
+            <AboutSection />
+            <ProjectsSection />
+            <ContactSection />
+          </main>
+
+          {/* Footer */}
+          <Footer />
+        </div>
+      )}
+    </>
   );
 };
 
