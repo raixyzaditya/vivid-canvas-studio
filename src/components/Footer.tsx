@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { Heart, Github, Linkedin, Mail } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -14,14 +14,14 @@ const Footer = () => {
             viewport={{ once: true }}
             className="flex items-center gap-2 text-muted-foreground text-sm"
           >
-            <span>© {currentYear} John Doe. Made with</span>
+            <span>© {currentYear} Aditya Rai. Made with</span>
             <motion.span
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
               <Heart className="text-red-500 fill-red-500" size={14} />
             </motion.span>
-            <span>and lots of coffee</span>
+            <span>and passion for AI</span>
           </motion.div>
 
           <motion.div
@@ -29,13 +29,27 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="flex items-center gap-6 text-sm text-muted-foreground"
+            className="flex items-center gap-4"
           >
-            <a href="#" className="hover:text-foreground transition-colors">
-              Privacy Policy
+            <a 
+              href="https://github.com/raixyzaditya" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Github size={18} />
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Terms of Service
+            <a 
+              href="#" 
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Linkedin size={18} />
+            </a>
+            <a 
+              href="mailto:raiaditya915@gmail.com" 
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Mail size={18} />
             </a>
           </motion.div>
         </div>

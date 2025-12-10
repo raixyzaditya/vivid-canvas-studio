@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Twitter } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import profileImage from '@/assets/profile-aditya.jpg';
 
 const HeroSection = () => {
   const containerVariants = {
@@ -51,8 +52,9 @@ const HeroSection = () => {
           {/* Text Content */}
           <div className="flex-1 text-center lg:text-left">
             <motion.div variants={itemVariants} className="mb-4">
-              <span className="inline-block px-4 py-2 rounded-full glass text-sm font-mono text-primary">
-                👋 Welcome to my portfolio
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-mono text-primary">
+                <MapPin size={14} />
+                Faridabad, India
               </span>
             </motion.div>
 
@@ -61,7 +63,7 @@ const HeroSection = () => {
               className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
             >
               Hi, I'm{' '}
-              <span className="gradient-text text-glow">John Doe</span>
+              <span className="gradient-text text-glow">Aditya Rai</span>
             </motion.h1>
 
             <motion.div
@@ -75,8 +77,9 @@ const HeroSection = () => {
               variants={itemVariants}
               className="text-lg text-muted-foreground max-w-xl mb-8 leading-relaxed"
             >
-              I craft exceptional digital experiences that blend creativity with cutting-edge technology. 
-              Turning complex problems into elegant, user-centric solutions.
+              B.Tech Computer Science & AI student specializing in AI-driven problem solving, 
+              backend engineering, and automation. Building RAG pipelines, fine-tuning models, 
+              and integrating AI into full-stack applications.
             </motion.p>
 
             <motion.div
@@ -96,16 +99,20 @@ const HeroSection = () => {
               className="flex gap-4 mt-8 justify-center lg:justify-start"
             >
               {[
-                { icon: Github, href: '#' },
-                { icon: Linkedin, href: '#' },
-                { icon: Twitter, href: '#' },
+                { icon: Github, href: 'https://github.com/raixyzaditya', label: 'GitHub' },
+                { icon: Linkedin, href: '#', label: 'LinkedIn' },
+                { icon: Mail, href: 'mailto:raiaditya915@gmail.com', label: 'Email' },
+                { icon: Phone, href: 'tel:+919818831002', label: 'Phone' },
               ].map((social, index) => (
                 <motion.a
                   key={index}
                   href={social.href}
+                  target={social.href.startsWith('http') ? '_blank' : undefined}
+                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="w-12 h-12 rounded-full glass flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-300"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label={social.label}
                 >
                   <social.icon size={20} />
                 </motion.a>
@@ -127,10 +134,14 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-3xl opacity-30 animate-pulse-slow" />
               
               {/* Image container */}
-              <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden gradient-border">
-                <div className="w-full h-full bg-gradient-to-br from-muted to-card flex items-center justify-center">
-                  <span className="text-8xl">👨‍💻</span>
-                </div>
+              <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full overflow-hidden gradient-border group">
+                <img 
+                  src={profileImage} 
+                  alt="Aditya Rai" 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Floating elements */}
@@ -139,7 +150,7 @@ const HeroSection = () => {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="text-3xl">⚛️</span>
+                <span className="text-3xl">🤖</span>
               </motion.div>
 
               <motion.div
@@ -147,7 +158,7 @@ const HeroSection = () => {
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="text-2xl">🚀</span>
+                <span className="text-2xl">🧠</span>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -177,10 +188,10 @@ const HeroSection = () => {
 
 const TypewriterText = () => {
   const roles = [
+    'AI/ML Engineer',
     'Full-Stack Developer',
-    'Creative Technologist',
-    'UI/UX Enthusiast',
-    'Problem Solver',
+    'Backend Specialist',
+    'RAG Systems Builder',
   ];
 
   return (
