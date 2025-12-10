@@ -36,7 +36,7 @@ const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <span className="text-6xl font-bold gradient-text">JD</span>
+        <span className="text-6xl font-bold gradient-text">AR</span>
       </motion.div>
 
       {/* Loading Bar */}

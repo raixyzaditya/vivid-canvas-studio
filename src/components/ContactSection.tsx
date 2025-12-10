@@ -1,14 +1,14 @@
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Send, Mail, MapPin, Github, Linkedin, Twitter, CheckCircle } from 'lucide-react';
+import { Send, Mail, MapPin, Phone, Github, Linkedin, CheckCircle, Code2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 const socialLinks = [
-  { icon: Github, href: '#', label: 'GitHub', color: 'hover:text-foreground' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn', color: 'hover:text-blue-500' },
-  { icon: Twitter, href: '#', label: 'Twitter', color: 'hover:text-sky-400' },
-  { icon: Mail, href: 'mailto:hello@johndoe.com', label: 'Email', color: 'hover:text-primary' },
+  { icon: Github, href: 'https://github.com/raixyzaditya', label: 'GitHub', color: 'hover:text-foreground' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/aditya-rai-4854742b8/', label: 'LinkedIn', color: 'hover:text-blue-500' },
+  
+  { icon: Mail, href: 'mailto:raiaditya915@gmail.com?subject=Hello Aditya&body=Hi Aditya,%0D%0A%0D%0AI wanted to connect with you regarding...', label: 'Email', color: 'hover:text-primary' },
 ];
 
 const ContactSection = () => {
@@ -22,28 +22,64 @@ const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { toast } = useToast();
-
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xrbnyody';
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Message sent!",
-      description: "Thanks for reaching out. I'll get back to you soon!",
-    });
-    
-    // Reset form after animation
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', email: '', message: '' });
-    }, 3000);
-  };
 
+    // Basic client-side validation (optional)
+    if (!formData.name?.trim() || !formData.email?.trim() || !formData.message?.trim()) {
+      toast({ title: 'Please fill all fields', variant: 'destructive' });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Honeypot field check (should be empty)
+    const honeypotValue = (e.currentTarget as HTMLFormElement).querySelector<HTMLInputElement>('input[name="website"]')?.value;
+    if (honeypotValue) {
+      // likely spam — silently ignore or show a friendly message
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Formspree expects JSON or form-encoded. JSON is fine for SPA.
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _replyto: formData.email, // lets Formspree set reply-to
+        }),
+      });
+
+      if (!res.ok) {
+        // Formspree returns 200/201 on success, other codes on error
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || 'Failed to send message');
+      }
+
+      // Success UI
+      setIsSubmitted(true);
+      toast({ title: 'Message sent!', description: "Thanks — I'll reply soon." });
+
+      // optional: confetti (install canvas-confetti to use)
+      // confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+
+      // clear form after short pause so user sees success
+      setTimeout(() => {
+        setFormData({ name: '', email: '', message: '' });
+        setIsSubmitted(false);
+      }, 2500);
+    } catch (err) {
+      console.error(err);
+      toast({ title: 'Error', description: (err as Error).message || 'Try again later', variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
@@ -70,7 +106,7 @@ const ContactSection = () => {
             Let's Work <span className="gradient-text">Together</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Have a project in mind? I'd love to hear about it. Drop me a message and let's create something amazing.
+            Have a project in mind? I'd love to hear about it. Let's create something amazing.
           </p>
         </motion.div>
 
@@ -82,7 +118,23 @@ const ContactSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="glass rounded-2xl p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                action="https://formspree.io/f/xrbnyody"   // <-- optional HTML fallback; replace YOUR_FORM_ID
+                method="POST"                                  // <-- required for fallback
+                noValidate
+              >
+                {/* HONEYPOT - keep visually hidden; bots fill it, humans won't */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ display: 'none' }}
+                />
+
                 {/* Name Input */}
                 <div className="relative">
                   <input
@@ -143,6 +195,9 @@ const ContactSection = () => {
                   </label>
                 </div>
 
+                {/* Accessible live region to announce success/error */}
+                <div aria-live="polite" className="sr-only" id="contact-status" />
+
                 {/* Submit Button */}
                 <Button
                   type="submit"
@@ -152,20 +207,13 @@ const ContactSection = () => {
                   disabled={isSubmitting || isSubmitted}
                 >
                   {isSubmitted ? (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="flex items-center gap-2"
-                    >
+                    <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-2">
                       <CheckCircle size={20} />
                       Message Sent!
                     </motion.span>
                   ) : isSubmitting ? (
                     <span className="flex items-center gap-2">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      >
+                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
                         <Send size={18} />
                       </motion.div>
                       Sending...
@@ -178,6 +226,7 @@ const ContactSection = () => {
                   )}
                 </Button>
               </form>
+
             </div>
           </motion.div>
 
@@ -191,8 +240,9 @@ const ContactSection = () => {
             <div className="space-y-8">
               {/* Info Cards */}
               <div className="space-y-4">
-                <motion.div
-                  className="glass rounded-xl p-6 flex items-center gap-4"
+                <motion.a
+                  href="mailto:raiaditya915@gmail.com"
+                  className="glass rounded-xl p-6 flex items-center gap-4 block"
                   whileHover={{ scale: 1.02, x: 4 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -201,9 +251,24 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">hello@johndoe.com</p>
+                    <p className="font-medium">raiaditya915@gmail.com</p>
                   </div>
-                </motion.div>
+                </motion.a>
+
+                <motion.a
+                  href="tel:+919818831002"
+                  className="glass rounded-xl p-6 flex items-center gap-4 block"
+                  whileHover={{ scale: 1.02, x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+                    <Phone className="text-primary" size={22} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="font-medium">+91 98188 31002</p>
+                  </div>
+                </motion.a>
 
                 <motion.div
                   className="glass rounded-xl p-6 flex items-center gap-4"
@@ -215,7 +280,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="font-medium">San Francisco, CA</p>
+                    <p className="font-medium">Faridabad, India</p>
                   </div>
                 </motion.div>
               </div>
@@ -228,6 +293,8 @@ const ContactSection = () => {
                     <motion.a
                       key={social.label}
                       href={social.href}
+                      target={social.href.startsWith('http') ? '_blank' : undefined}
+                      rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       className={`w-12 h-12 rounded-full glass flex items-center justify-center text-muted-foreground ${social.color} transition-all duration-300`}
                       whileHover={{ scale: 1.15, y: -2 }}
                       whileTap={{ scale: 0.95 }}
@@ -255,7 +322,7 @@ const ContactSection = () => {
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                   </span>
                   <span className="text-sm">
-                    Currently available for freelance work
+                    Open to internships and collaboration opportunities
                   </span>
                 </div>
               </motion.div>
